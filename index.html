@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang='ja'>
+<head>
+  <meta charset="UTF-8">
+  <title>React Practice</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+<script type="text/babel">
+  (() =>{
+
+    function showMessage() {
+      alert('Hello');
+    }
+
+    //イベントオブジェクトなし
+    //function countUp(color) {
+    //  alert(color);
+    //}
+
+    //イベントオブジェクトあり
+    function countUp(e, color) {
+      e.preventDefault(); //画面遷移無効
+      alert(color);
+    }
+    
+    //普通の関数
+    //  classと違い、stateを使えない。しかし、renderをかまさずにreturnを直接書ける
+    //function Counter(props) {
+      //1.listタグだけreturnを1行で定義
+      //return <li style={{backgroundColor:props.color}}> 0 {props.color}</li>;
+      
+      //2-1.onClickをシンプルに定義
+      //return(
+      //  <li style={{backgroundColor:props.color}} onClick={countUp}>
+      //    0 {props.color}
+      //  </li>
+      //);
+
+      //2-2.onClickをアロー関数で定義。イベントオブジェクトは渡さない
+      //return(
+      //  <li style={{backgroundColor:props.color}} onClick={() => countUp(props.color)}>
+      //    0 {props.color}
+      //  </li>
+      //);
+
+      //2-3.onClickをアロー関数で定義。イベントオブジェクトを渡す
+      //return(
+      //  <li style={{backgroundColor:props.color}}>
+      //    <a href="#" onClick={(e) => countUp(e, props.color)}>
+      //    0 {props.color}
+      //    </a>
+      //  </li>
+      //);
+    //}
+
+    //class
+    //  stateを使うにはclassにする必要がある
+    //  classでは直接returnできないので、render内にreturnを書く
+    //  stateはconstructorで設定。superで親クラスのconstructorを呼ぶ必要がある
+    class Counter extends React.Component {
+      constructor(props){
+        super(props);
+        this.state = {
+          count: 0,
+          message: 'test'
+        };
+        //countUp を括弧なしで呼ぶとメソッドの中では this が undefined になってしまう
+        //従って、以下のようにthis.countUp にこのclass自体をbindする必要がある
+        this.countUp = this.countUp.bind(this);
+      }
+      countUp(){
+        //React では this.state に値がセットできるのは constructor の中だけで、それ以外の場所では setState を使わないといけない
+        // this.state.count = this.state.count + 1;
+        //また setState が実行されるタイミングは React が勝手に決めるので、以下のようにすると count の値がほかの処理で書き換わってしまって、うまくカウントアップできない場合もある
+        // this.setState({
+        //   count: this.state.count + 1
+        // });
+        //上記の経緯から、setStateは以下のように書く
+        this.setState(prevState => {
+          return {
+            count: prevState.count + 1
+          };
+        });
+      }
+      render(){
+        return(
+          <li style={{backgroundColor:this.props.color}} onClick={this.countUp}>
+            {this.state.count}
+          </li>
+        );
+      }
+    }
+
+    class App extends React.Component {
+      constructor() {
+        super();
+        this.state = {
+          
+        }
+      }
+      render() {
+        return (
+          <div className="container">
+            <ul>
+              <Counter color="tomato"/>
+              <Counter color="skyblue"/>
+              <Counter color="limegreen"/>
+            </ul>
+            <div>TOTAL INVENTORY: 3</div>
+          </div>
+        );
+      }
+    }
+
+    
+    const name = 'suzuki';
+    ReactDOM.render(
+      //<div className="box"></div>,
+      //<div style={{width:100, height:100, backgroundColor:'tomato'}} onClick={showMessage}>
+      //<p onClick={showMessage}>Hello! {name.toUpperCase()}</p>
+      <App/>,      
+      document.getElementById('root')
+    );
+  })();
+</script>
+</body>
+</html>
