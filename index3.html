@@ -21,12 +21,13 @@
         );
       }
 
+      //stateを使わないので classではなくfunctionで定義すればよい
       function CounterList(props) {
         const counters = props.counters.map(counter => {
           return (
             <Counter
               counter={counter}
-              key={counter.id}
+              key={counter.id}  //ループで処理するような要素には key属性に何かしらuniqueな値の設定が必須
               countUp={props.countUp}
             />
           );
@@ -53,14 +54,14 @@
           };
           this.countUp = this.countUp.bind(this);
         }
-        countUp(counter) {
+        countUp(c) {
           this.setState(prevState => {
             const counters = prevState.counters.map(counter => {
               return {id: counter.id, count: counter.count, color: counter.color};
             });
             const pos = counters.map(counter => {
               return counter.id;
-            }).indexOf(counter.id);
+            }).indexOf(c.id);
             counters[pos].count++;
             return {
               counters: counters,
