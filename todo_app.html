@@ -24,6 +24,7 @@
           return !todo.isDone;
         });
 
+        // My Todos(未完了タスク数/全タスク数)
         return (
           <h1>
             <button onClick={props.purge}>Purge</button>
@@ -69,6 +70,7 @@
       }
 
       function TodoForm(props) {
+        // reactではUIの変更は setState() でのみ行うようになっているので、以下のonChangeが無いとformの入力でさえもできない
         return (
           <form onSubmit={props.addTodo}>
             <input type="text" value={props.item} onChange={props.updateItem}/>
@@ -101,6 +103,7 @@
             return;
           }
 
+          // 未完了のタスクだけ残す（完了タスクは消える）
           const todos = this.state.todos.filter(todo => {
             return !todo.isDone;
           });
@@ -113,6 +116,9 @@
           e.preventDefault(); //画面遷移無効
 
           //空文字のitemは追加されないようにする
+          if (this.state.item.trim() === '') {
+            return;
+          }
 
           const item = {
             id: getUniqueId(),
@@ -133,7 +139,7 @@
             return;
           }
 
-          const todos = this.state.todos.slice(); //checkTodoと違いtodoの属性にはアクセス不要なのでmapでなくsliceでいける
+          const todos = this.state.todos.slice(); //checkTodoと違いtodoの属性にはアクセス不要なのでmapでなくsliceでいける(slice:浅いコピー)
           const pos = this.state.todos.indexOf(todo);
 
           todos.splice(pos, 1); //pos番目から1つの要素を削除
