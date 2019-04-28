@@ -13,116 +13,108 @@
 <script type="text/babel">
   (() =>{
 
-//コンポーネントの作成
-class Number extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      stateVal : 0
+    //コンポーネントの作成
+    class Number extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          stateVal : 0
+        };
+        this.incrementState = this.incrementState.bind(this)
+      }
+      //Stateの加算
+      incrementState(){
+          this.setState({
+            stateVal : this.state.stateVal+1
+          });
+      }
+      // 1.コンポーネント初期表示時1/2
+      componentWillMount(){
+        console.log("コンポーネントのマウント前")
+      }
+      // 1.コンポーネント初期表示時2/2
+      componentDidMount(){
+        console.log("コンポーネントのマウント後")
+      }
+      // 3.コンポーネント外のstate更新時1/4
+      componentWillReceiveProps(){
+        console.log("コンポーネントが受け取るpropsが変化")
+      }
+      // 2.コンポーネント内のstate更新時1/3
+      // 3.コンポーネント外のstate更新時2/4
+      shouldComponentUpdate(){
+        console.log("コンポーネントがアップデートされる前1")
+        return true;
+      }
+      // 2.コンポーネント内のstate更新時2/3
+      // 3.コンポーネント外のstate更新時3/4
+      componentWillUpdate(){
+        console.log("コンポーネントがアップデートされる前2")
+      }
+      // 2.コンポーネント内のstate更新時3/3
+      // 3.コンポーネント外のstate更新時4/4
+      componentDidUpdate(){
+        console.log("コンポーネントがアップデートされた後")
+      }
+      // 4.コンポーネント非表示時1/1
+      componentWillUnmount(){
+        console.log("コンポーネントがアンマウントされた後")
+      }
+      render() {
+        return (
+          <div>
+            <p>props:{this.props.propVal}</p>
+            <p>state:{this.state.stateVal}</p>
+            <input type="button" value="stateの加算" onClick={this.incrementState} />
+          </div>
+        )
+      }
     };
-    this.incrementState = this.incrementState.bind(this)
-  }
-  //Stateの加算
-  incrementState(){
-      this.setState({
-        stateVal : this.state.stateVal+1
-      });
-  }
-  // 1.コンポーネント初期表示時1/2
-  componentWillMount(){
-    console.log("コンポーネントのマウント前")
-  }
-  // 1.コンポーネント初期表示時2/2
-  componentDidMount(){
-    console.log("コンポーネントのマウント後")
-  }
-  // 3.コンポーネント外のstate更新時1/4
-  componentWillReceiveProps(){
-    console.log("コンポーネントが受け取るpropsが変化")
-  }
-  // 2.コンポーネント内のstate更新時1/3
-  // 3.コンポーネント外のstate更新時2/4
-  shouldComponentUpdate(){
-    console.log("コンポーネントがアップデートされる前1")
-    return true;
-  }
-  // 2.コンポーネント内のstate更新時2/3
-  // 3.コンポーネント外のstate更新時3/4
-  componentWillUpdate(){
-    console.log("コンポーネントがアップデートされる前2")
-  }
-  // 2.コンポーネント内のstate更新時3/3
-  // 3.コンポーネント外のstate更新時4/4
-  componentDidUpdate(){
-    console.log("コンポーネントがアップデートされた後")
-  }
-  // 4.コンポーネント非表示時1/1
-  componentWillUnmount(){
-    console.log("コンポーネントがアンマウントされた後")
-  }
-  render() {
-    return (
-      <div>
-        <p>props:{this.props.propVal}</p>
-        <p>state:{this.state.stateVal}</p>
-        <input type="button" value="stateの加算" onClick={this.incrementState} />
-      </div>
-    )
-  }
-};
-class MyComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      propVal : 0,
-      isComponent :false
-    };
-    this.incrementProps = this.incrementProps.bind(this);
-    this.ｍountComponent = this.ｍountComponent.bind(this);
-  }
-  //propsの加算
-  incrementProps(){
-      this.setState({
-        propVal : this.state.propVal+1
-      });
-  }
-  
-  ｍountComponent(){
-      this.setState({
-        isComponent : !this.state.isComponent
-      });
-  }
+    class MyComponent extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          propVal : 0,
+          isComponent :false
+        };
+        this.incrementProps = this.incrementProps.bind(this);
+        this.ｍountComponent = this.ｍountComponent.bind(this);
+      }
+      //propsの加算
+      incrementProps(){
+          this.setState({
+            propVal : this.state.propVal+1
+          });
+      }
+      
+      ｍountComponent(){
+          this.setState({
+            isComponent : !this.state.isComponent
+          });
+      }
 
 
-  render() {
-    return (
-      <div>
-        <input type="button" value="Numberコンポーネントのマウント切り替え" onClick={this.ｍountComponent} /><br />
-        {(() => {
-          if (this.state.isComponent) {
-            return <Number propVal={this.state.propVal} />;
-          }else{
-            return null
-          }
-        })()}
-        <input type="button" value="propsの加算" onClick={this.incrementProps} /><br />
-        
-      </div>
-    )
-  }
-};
- //コンポーネントの描画
-// ReactDOM.render(
-//   <MyComponent />,
-//   document.getElementById('app')
-// );
+      render() {
+        return (
+          <div>
+            <input type="button" value="Numberコンポーネントのマウント切り替え" onClick={this.ｍountComponent} /><br />
+            {(() => {
+              if (this.state.isComponent) {
+                return <Number propVal={this.state.propVal} />;
+              }else{
+                return null
+              }
+            })()}
+            <input type="button" value="propsの加算" onClick={this.incrementProps} /><br />
+            
+          </div>
+        )
+      }
+    };
 
 
     
     ReactDOM.render(
-      //<div className="box"></div>,
-      //<div style={{width:100, height:100, backgroundColor:'tomato'}} onClick={showMessage}>
-      //<p onClick={showMessage}>Hello! {name.toUpperCase()}</p>
       <MyComponent/>,      
       document.getElementById('root')
     );
